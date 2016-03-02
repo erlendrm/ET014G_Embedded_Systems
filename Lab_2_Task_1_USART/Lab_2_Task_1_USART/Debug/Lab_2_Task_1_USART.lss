@@ -35,15 +35,15 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
  15 .debug_frame  0000120c  00000000  00000000  0001183c  2**2
                   CONTENTS, READONLY, DEBUGGING
- 16 .debug_str    000021d6  00000000  00000000  00012a48  2**0
+ 16 .debug_str    0000223b  00000000  00000000  00012a48  2**0
                   CONTENTS, READONLY, DEBUGGING
- 17 .debug_loc    00001a8a  00000000  00000000  00014c1e  2**0
+ 17 .debug_loc    00001a8a  00000000  00000000  00014c83  2**0
                   CONTENTS, READONLY, DEBUGGING
- 18 .debug_macinfo 006804bf  00000000  00000000  000166a8  2**0
+ 18 .debug_macinfo 006804bf  00000000  00000000  0001670d  2**0
                   CONTENTS, READONLY, DEBUGGING
  19 .stack        00001000  0000f000  0000f000  00000000  2**0
                   ALLOC
- 20 .debug_ranges 00000580  00000000  00000000  00696b68  2**3
+ 20 .debug_ranges 00000580  00000000  00000000  00696bd0  2**3
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .reset:
@@ -2622,7 +2622,7 @@ int main (void)
 				gpio_set_pin_high(LED1_GPIO);
 80003086:	33 cc       	mov	r12,60
 80003088:	f0 1f 00 33 	mcall	80003154 <main+0x158>
-				// Send debug message over CDC				
+				// Send debug message over USART				
 				usart_write_line(USART,"--------------\r\n");
 8000308c:	4b 5b       	lddpc	r11,80003160 <main+0x164>
 8000308e:	fe 7c 18 00 	mov	r12,-59392
@@ -2659,7 +2659,7 @@ int main (void)
 				gpio_set_pin_high(LED0_GPIO);
 800030d0:	33 bc       	mov	r12,59
 800030d2:	f0 1f 00 21 	mcall	80003154 <main+0x158>
-				// Send debug message over CDC
+				// Send debug message over USART
 				usart_write_line(USART,"--------------\r\n");
 800030d6:	4a 3b       	lddpc	r11,80003160 <main+0x164>
 800030d8:	fe 7c 18 00 	mov	r12,-59392

@@ -114,7 +114,7 @@ int main (void)
 				// Activate LED0 and deactivate LED1
 				gpio_set_pin_low(LED0_GPIO);
 				gpio_set_pin_high(LED1_GPIO);
-				// Send debug message over CDC				
+				// Send debug message over USART				
 				usart_write_line(USART,"--------------\r\n");
 				usart_write_line(USART,"Interrupt detected on PB1\r\n");
 				usart_write_line(USART,"STATE_1 engaged!\r\n");
@@ -128,7 +128,7 @@ int main (void)
 				// Activate LED1 and deactivate LED0
 				gpio_set_pin_low(LED1_GPIO);
 				gpio_set_pin_high(LED0_GPIO);
-				// Send debug message over CDC
+				// Send debug message over USART
 				usart_write_line(USART,"--------------\r\n");
 				usart_write_line(USART,"Interrupt detected on PB1\r\n");
 				usart_write_line(USART,"STATE_2 engaged!\r\n");

@@ -940,7 +940,7 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr3
  .debug_frame   0x000010f0       0x9c src/ASF/avr32/drivers/intc/intc.o
  .debug_frame   0x0000118c       0x80 src/main.o
 
-.debug_str      0x00000000     0x21d6
+.debug_str      0x00000000     0x223b
  *(.debug_str)
  .debug_str     0x00000000      0xb90 src/ASF/avr32/drivers/flashc/flashc.o
                                 0xc7d (size before relaxing)
@@ -954,8 +954,8 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr32 gcc/native/3.4.1067/avr3
                                 0x56b (size before relaxing)
  .debug_str     0x00001dcd      0x37d src/ASF/avr32/drivers/intc/intc.o
                                 0x4bf (size before relaxing)
- .debug_str     0x0000214a       0x8c src/main.o
-                                0x5e4 (size before relaxing)
+ .debug_str     0x0000214a       0xf1 src/main.o
+                                0x5cc (size before relaxing)
 
 .debug_loc      0x00000000     0x1a8a
  *(.debug_loc)
