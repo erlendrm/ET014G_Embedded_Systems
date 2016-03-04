@@ -16,6 +16,7 @@
 
 static void erm_tc_init(volatile avr32_tc_t *tc, uint32_t tick_ms, uint32_t pba_clk)
 {
+	float		temp;
 	uint16_t	RC;
 	
 	// Defining waveform generation options.
@@ -62,7 +63,8 @@ static void erm_tc_init(volatile avr32_tc_t *tc, uint32_t tick_ms, uint32_t pba_
 	
 	// Internal clock source 4 is active, hence tc_clk = pba_clk / 32
 	// Determine value of RC based on desired tick_time_ms
-	RC = (pba_clk * tick_ms) / 32000;
+	temp = ( ((float) pba_clk) * ((float) tick_ms) ) / 32000.0;
+	RC = (uint16_t) temp;
 	
 	// Set RC value
 	tc_write_rc(tc, ERM_TC_CHANNEL_ID, RC);

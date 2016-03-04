@@ -32,8 +32,8 @@
 volatile unsigned long *sdram = SDRAM;
 
 // Global variables
-uint32_t interrupt_identifier	= INT_NONE;
-uint32_t change_identifier		= CHANGE_PWM_FREQUENCY;
+uint32_t			interrupt_identifier	= INT_NONE;
+uint32_t			change_identifier		= CHANGE_PWM_FREQUENCY;
 
 
 #if __GNUC__
@@ -91,8 +91,8 @@ int main (void)
 	char temp_string[9];
 	uint32_t i, j;
 	uint32_t pot_value;
-	uint32_t pwm_frequency	= 100;
-	uint32_t pwm_duty_cycle = 50;
+	uint32_t pwm_frequency	= 100;	// Initial value 100 Hz
+	uint32_t pwm_duty_cycle = 50;	// Initial value 50 % duty cycle
 	
 	// Configure main CPU clock and peripheral bus speed
 	pm_freq_param_t System_Clock = {
@@ -177,10 +177,13 @@ int main (void)
 	// Initialize Push Button 0 (PB0) interrupt with INT0 priority
 	push_button_0_interrupt_init(&push_button_handler, AVR32_INTC_INT0);
 	
+	// Enable global interrupts
+	Enable_global_interrupt();
+	
 	// Initialize and enable ADC for the Potentiometer
 	adc_pot_init();
 	
-	// Initialize and start the PWM (output on pin PB22)
+	// Initialize and start the PWM with initial values (output on pin PB22)
 	erm_pwm_init(pwm_duty_cycle, pwm_frequency, PBA_HZ);
 	
 	// Initialize and start the TC with interrupts every SAMPLING_TIME
@@ -188,9 +191,6 @@ int main (void)
 	
 	// Start ADC
 	adc_start(&AVR32_ADC);
-	
-	// Enable global interrupts
-	Enable_global_interrupt();
 	
 	while (1)
 	{
@@ -204,44 +204,47 @@ int main (void)
 				
 				// Restart ADC
 				adc_start(&AVR32_ADC);
+				
+				switch (change_identifier)
+				{
+					case CHANGE_PWM_FREQUENCY:
+					// Look up corresponding PWM frequency based on pot_value
+					pwm_frequency	= sdram[pot_value];
+					// Reset the PWM config and enable PWM update on the next period
+					erm_pwm_update_config(pwm_duty_cycle, pwm_frequency, PBA_HZ, PWM_UPDATE_PERIOD);
+					erm_pwm_update_channel();
+					// Update the LCD display
+					dip204_set_cursor_position(8,2);
+					sprintf(temp_string, "%lu   ", pwm_frequency);
+					dip204_write_string(temp_string);
+					dip204_set_cursor_position(15,2);
+					dip204_write_string("Hz *");
+					dip204_set_cursor_position(15,3);
+					dip204_write_string("%   ");
+					break;
+					
+					case CHANGE_PWM_DUTY_CYCLE:
+					// Look up corresponding PWM duty cycle based on pot_value
+					pwm_duty_cycle	= sdram[pot_value + POT_ADC_RESOLUTION];
+					// Reset the PWM config and enable PWM update on the next period
+					erm_pwm_update_config(pwm_duty_cycle, pwm_frequency, PBA_HZ, PWM_UPDATE_DUTY);
+					erm_pwm_update_channel();
+					// Update the LCD display
+					dip204_set_cursor_position(8,3);
+					sprintf(temp_string, "%lu   ", pwm_duty_cycle);
+					dip204_write_string(temp_string);
+					dip204_set_cursor_position(15,2);
+					dip204_write_string("Hz  ");
+					dip204_set_cursor_position(15,3);
+					dip204_write_string("%  *");
+					break;
+					
+					default:
+					// Impossible state, only here for debugging
+					break;
+				}
 			}
 			
-			switch (change_identifier)
-			{
-				case CHANGE_PWM_FREQUENCY:
-				// Look up corresponding PWM frequency based on pot_value
-				pwm_frequency	= sdram[pot_value];
-				// Update the LCD display
-				dip204_set_cursor_position(8,2);
-				sprintf(temp_string, "%lu   ", pwm_frequency);
-				dip204_write_string(temp_string);
-				dip204_set_cursor_position(15,2);
-				dip204_write_string("Hz *");
-				dip204_set_cursor_position(15,3);
-				dip204_write_string("%   ");
-				break;
-				
-				case CHANGE_PWM_DUTY_CYCLE:
-				// Look up corresponding PWM duty cycle based on pot_value
-				pwm_duty_cycle	= sdram[pot_value + POT_ADC_RESOLUTION];
-				// Update the LCD display
-				dip204_set_cursor_position(8,3);
-				sprintf(temp_string, "%lu   ", pwm_duty_cycle);
-				dip204_write_string(temp_string);
-				dip204_set_cursor_position(15,2);
-				dip204_write_string("Hz  ");
-				dip204_set_cursor_position(15,3);
-				dip204_write_string("%  *");
-				break;
-				
-				default:
-				// Impossible state, only here for debugging
-				break;
-			}
-			
-			// Re-initialize and restart the PWM (output on pin PB22)
-			erm_pwm_init(pwm_duty_cycle, pwm_frequency, PBA_HZ);
-						
 			// Reset interrupt identifier
 			interrupt_identifier = INT_NONE;
 		}
