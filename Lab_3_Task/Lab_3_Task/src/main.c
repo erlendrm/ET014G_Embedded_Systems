@@ -199,7 +199,7 @@ int main (void)
 		{ 
 			if (interrupt_identifier == INT_TC)
 			{
-				// Read Potentiometer value and convert it to duty cycle in %
+				// Read Potentiometer value
 				pot_value = adc_get_value(&AVR32_ADC, ADC_POTENTIOMETER_CHANNEL); 
 				
 				// Restart ADC

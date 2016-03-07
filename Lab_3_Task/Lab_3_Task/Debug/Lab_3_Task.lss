@@ -7406,7 +7406,7 @@ int main (void)
 80005518:	58 18       	cp.w	r8,1
 8000551a:	e0 81 00 88 	brne	8000562a <main+0x35a>
 			{
-				// Read Potentiometer value and convert it to duty cycle in %
+				// Read Potentiometer value
 				pot_value = adc_get_value(&AVR32_ADC, ADC_POTENTIOMETER_CHANNEL); 
 8000551e:	30 1b       	mov	r11,1
 80005520:	fe 7c 3c 00 	mov	r12,-50176
